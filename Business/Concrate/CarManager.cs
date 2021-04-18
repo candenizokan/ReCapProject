@@ -1,5 +1,5 @@
 ﻿using Business.Abstract;
-using DataAccess.Concrate.InMemory;
+using DataAccess.Abstract;
 using Entities.Concrate;
 using System;
 using System.Collections.Generic;
@@ -11,27 +11,36 @@ namespace Business.Concrate
 {
     public class CarManager : ICarService
     {
-        InMemoryCarDal _inMemoryCarDal;
+        //InMemoryCarDal _inMemoryCarDal;
+        ICarDal _carDal;
 
-        public CarManager(InMemoryCarDal inMemoryCarDal)
+        public CarManager(ICarDal carDal)
         {
-            _inMemoryCarDal = inMemoryCarDal;
-        }
-        public List<Car> GetAll()
-        {
-            return _inMemoryCarDal.GetAll();
+            _carDal = carDal;
         }
 
-        public List<Car> GetById(int Id)
+        public void Add(Car car)
         {
-            if (Id<5)
+            if (car.DailyPrice>0)
             {
-                return _inMemoryCarDal.GetById(Id);
+                _carDal.Add(car);
+                Console.WriteLine("Araba eklendi");
             }
             else
             {
-                return null;
+                Console.WriteLine("Araba eklenemedi");
             }
+        }
+
+        public List<Car> GetAll()
+        {
+            return _carDal.GetAll();
+        }
+
+        public List<Car> GetCarsByBrandId(int brandId)
+        {
+
+            return _carDal.GetAll(p => p.BrandId == brandId);
         }
     }
 }
